@@ -1,0 +1,28 @@
+name: Format and Lint JSON/YAML
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+env:
+  # Configurable file extensions
+  JSON_EXTENSIONS: "json vil"
+  YAML_EXTENSIONS: "yml yaml"
+jobs:
+  format-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install tools
+        run: |
+          # Install jq for JSON processing
+          sudo apt-get update
+          sudo apt-get install -y jq
+
+          # Install yq for YAML processing
+          sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+          sudo chmod +x /usr/local/bin/yq
+      - name: Run format and lint check
+        run: |
+          chmod +x ./format-lint.sh
+          ./format-lint.sh
